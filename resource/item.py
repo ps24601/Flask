@@ -17,29 +17,15 @@ class Item(Resource):
 
     @jwt_required()
     def get(self, name):
-        # 1. this is one way to implement
-        # for item in items:
-        #     if item['name'] == name:
-        #         return item
-        # return {'item': None}, 404
-        # # 2. another way
-        # item = next(filter(lambda x: x['name'] == name, items), None)
-        # return {'item': item},200 if item else 404
 
         item = ItemModel.findItem(name)
         if item:
             return item.json()
         return {'message': 'Item Not Found'}, 404
-        # return {'resource': name}
+
     
     def post(self,name):
-        # we can use Item.findItem(name) also insetad of self.findItem(name)
-        if ItemModel.findItem(name):
-            # return {'item':{'name':row[0], price}}
-        # if the header is not set then we can get error, like data not sent in json type
-        # to vercome we can say that force= True, but this will then  force the conversion everytime, rather
-        # we can use the silent type
-        
+        if ItemModel.findItem(name):        
             return {'message': "item {} already exists".format(name)}, 400 # 400 is bad request
         data = Item.parser.parse_args()        
         item = ItemModel(name, data['price'], data['store_id'])
@@ -48,20 +34,16 @@ class Item(Resource):
         except:
             return {'message':"An Internal error occured"}, 500 # internal server error code
         
-        # response code for succesful post (created) is 201 not 200
-        # 202 is for accepted, that is when creating takes time, we return that it is accepted but not yet created.
         return item.json(), 201
 
     def delete(self,name):
         item = ItemModel.findItem(name)
         if item:
             item.deleteFromDb()
-    
-        return {'message': 'item deleted'}
+            return {'message':'Item deleted'}
+        return {'message': 'item not found'}, 404
 
     def put(self,name):
-
-        # we can include this code where requried or we can make it part of class itself.
 
         data = Item.parser.parse_args()
 

@@ -5,8 +5,7 @@ class Store(Resource):
     def get(self,name):
         store = StoreModel.findStore(name)
         if store:
-            return store.json()
-        
+            return store.json()        
         return {'meassage': "Store not exist"}, 404
 
 

@@ -7,15 +7,11 @@ from resource.item import Item, ItemList
 from resource.store import Store, StoreList
 
 app = Flask(__name__)
-# this is to tell where to look for db
-# further instead of sqlite db, we ccn have postgres, oracle etc
 app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///data.db'
-# to turn off the flask SQLALchemy tracker, but not the SQLALchemy tracker
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] =  False
-# secret key
+app.config['PROPOGATE_EXCEPTIONS'] = True
 app.secret_key = "ppsin"
 api = Api(app)
-
 
 jwt = JWT(app, authenticate, identity)   # JWT creates new endpoint  which is /auth
  
